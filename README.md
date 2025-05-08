@@ -10,20 +10,21 @@
   </style>
 </head>
 <body>
-  <h1>🦈 Whale Tracker (via DeBank API)</h1>
+  <h1>🦈 Whale Tracker (via DeBank API + Proxy)</h1>
   <button onclick="trackWhales()">Track Wallets</button>
   <button onclick="exportCSV()">Export to CSV</button>
   <pre id="output">Click to fetch wallet data...</pre>
 
   <script>
     const wallets = [
-      '0xb245dDeF1833D278340880ff685d02559dadc9dF',
-      '0xF82659714336B4d55b7aa9952dD03BAEd97Be9C9'
+      '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+      '0xDC76CD25977E0a5Ae17155770273aD58648900D3'
     ];
     let csvData = [['Wallet', 'Symbol', 'Amount', 'USD Value']];
 
     async function fetchDeBank(address) {
-      const url = `https://openapi.debank.com/v1/user/token_list?id=${address}&is_all=true`;
+      const proxyBase = 'https://corsproxy.io/?';
+      const url = `${proxyBase}https://openapi.debank.com/v1/user/token_list?id=${address}&is_all=true`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('API error');
       return await res.json();
