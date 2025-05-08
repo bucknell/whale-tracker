@@ -20,7 +20,6 @@
       '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
       '0xDC76CD25977E0a5Ae17155770273aD58648900D3'
     ];
-
     let csvData = [['Wallet', 'Symbol', 'Amount', 'USD Value']];
 
     async function fetchDeBank(address) {
