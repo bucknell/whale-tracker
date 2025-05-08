@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Whale Tracker (DeBank)</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+    button { font-size: 16px; padding: 10px 20px; }
+    pre { background: #fff; padding: 15px; border: 1px solid #ccc; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🦈 Whale Tracker (via DeBank API)</h1>
+  <button onclick="trackWhales()">Track Wallets</button>
+  <pre id="output">Click to fetch wallet data...</pre>
+
+  <script>
+    const wallets = [
+      '0xb245dDeF1833D278340880ff685d02559dadc9dF',
+      '0xF82659714336B4d55b7aa9952dD03BAEd97Be9C9'
+    ];
+
+    async function fetchDeBank(address) {
+      const url = `https://openapi.debank.com/v1/user/token_list?id=${address}&is_all=true`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('API error');
+      return await res.json();
+    }
+
+    async function trackWhales() {
+      const out = document.getElementById('output');
+      out.textContent = 'Loading data...\n';
+
+      for (const wallet of wallets) {
+        out.textContent += `\n📊 Wallet: ${wallet}\n`;
+        try {
+          const tokens = await fetchDeBank(wallet);
+          tokens.forEach(t => {
+            const usd = (t.price * t.amount).toFixed(2);
+            out.textContent += `→ ${t.symbol.padEnd(8)} $${usd} | ${t.amount.toFixed(4)} tokens\n`;
+          });
+        } catch (e) {
+          out.textContent += `❌ Error: ${e.message}\n`;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
